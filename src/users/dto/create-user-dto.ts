@@ -5,7 +5,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 
-export class createUserDTO {
+export class CreateUserDTO {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -23,4 +23,7 @@ export class createUserDTO {
     minNumbers: 1,
   })
   password: string;
+
+  @IsUrl()
+  avatar: string;
 }
