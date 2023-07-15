@@ -21,5 +21,6 @@ import { JwtModule } from '@nestjs/jwt';
       useClass: PrismaUsersRepository,
     },
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}
