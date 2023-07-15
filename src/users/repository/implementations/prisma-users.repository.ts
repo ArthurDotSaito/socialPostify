@@ -11,7 +11,7 @@ export class PrismaUsersRepository implements UsersRepository {
     return await this.prisma.user.create({ data: data });
   }
 
-  async findUserByEmail(email) {
-    return await this.prisma.user.findUnique({ where: email });
+  async findUserByEmail(email: string) {
+    return await this.prisma.user.findUnique({ where: { email } });
   }
 }

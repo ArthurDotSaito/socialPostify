@@ -12,7 +12,7 @@ export class UsersService {
     const userExist = await this.usersRepository.findUserByEmail(email);
     if (userExist)
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
-    const hashPassword = bcrypt.hashSync(password);
+    const hashPassword = bcrypt.hashSync(password, 10);
 
     return await this.usersRepository.createUser({
       name,
