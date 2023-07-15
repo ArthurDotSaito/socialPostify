@@ -21,4 +21,10 @@ export class UsersService {
       avatar,
     });
   }
+
+  async findUserById(id: string) {
+    const user = await this.usersRepository.findUserById(id);
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return user;
+  }
 }
