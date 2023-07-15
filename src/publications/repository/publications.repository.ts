@@ -6,4 +6,5 @@ export abstract class PublicationsRepository {
     data: CreatePublicationDTO,
     userId: string,
   ): Promise<void>;
+  abstract getPublicationWithTitle(title: string): Promise<Publication>;
 }

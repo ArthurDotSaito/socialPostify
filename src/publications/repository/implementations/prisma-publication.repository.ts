@@ -2,10 +2,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PublicationsRepository } from '../publications.repository';
 import { CreatePublicationDTO } from 'src/publications/dto/create-publication.dto';
-import { SocialMedia } from '@prisma/client';
+import { Publication, SocialMedia } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PublicationsPrismaRepository implements PublicationsRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async getPublicationWithTitle(title: string): Promise<Publication> {
+    return await this.prisma.publication.findFirst({ where: { title } });
+  }
 
   async createPublication(
     data: CreatePublicationDTO,
