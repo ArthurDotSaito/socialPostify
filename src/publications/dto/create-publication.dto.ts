@@ -24,7 +24,7 @@ export class CreatePublicationDTO {
   dateToPublish: string;
 
   @IsBoolean()
-  published: boolean;
+  published = false;
 
   @IsNotEmpty()
   @IsString()
