@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsString,
   IsStrongPassword,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateUserDTO {
