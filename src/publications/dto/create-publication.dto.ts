@@ -1,6 +1,6 @@
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsNotEmpty,
   IsString,
   IsUrl,
@@ -20,7 +20,7 @@ export class CreatePublicationDTO {
   text: string;
 
   @IsString()
-  @IsDate()
+  @IsDateString()
   dateToPublish: string;
 
   @IsBoolean()
