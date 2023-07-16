@@ -18,4 +18,8 @@ export class PublicationsService {
 
     await this.publicationRepository.createPublication(data, userId);
   }
+
+  async getAllUserPublications(userId: string) {
+    return await this.publicationRepository.getAllUserPublications(userId);
+  }
 }
