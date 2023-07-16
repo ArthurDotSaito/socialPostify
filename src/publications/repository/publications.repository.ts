@@ -7,4 +7,5 @@ export abstract class PublicationsRepository {
     userId: string,
   ): Promise<void>;
   abstract getPublicationWithTitle(title: string): Promise<Publication>;
+  abstract getAllUserPublications(userId: string): Promise<Publication[]>;
 }

@@ -13,6 +13,14 @@ export class PublicationsPrismaRepository implements PublicationsRepository {
     return await this.prisma.publication.findFirst({ where: { title } });
   }
 
+  async getAllUserPublications(userId: string): Promise<Publication[]> {
+    return await this.prisma.publication.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
+
   async createPublication(
     data: CreatePublicationDTO,
     userId: string,
