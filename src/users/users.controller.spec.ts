@@ -4,7 +4,6 @@ import { UsersService } from './users.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AppModule } from 'src/app.module';
 import TestUtil from 'src/common/test/test-util';
-import { User } from './entity/User';
 
 const mockService = {
   createUser: jest.fn(),
@@ -40,11 +39,11 @@ describe('UsersController', () => {
   });
 
   describe('createUser', () => {
-    it('Should return a user sucessfully', async () => {
+    it('Should create a user sucessfully', async () => {
       const user = TestUtil.giveValidUser();
       mockService.createUser(user);
 
-      const createdUser = await usersService.createUser(user);
+      const createdUser = await usersController.createUser(user);
       expect(mockService.createUser).toBeCalledTimes(1);
       expect(createdUser).toHaveProperty('id');
       expect(createdUser).toHaveProperty('name');
