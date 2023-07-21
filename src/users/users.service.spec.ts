@@ -4,29 +4,27 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersRepository } from './repository/users.repository';
 import TestUtil from 'src/common/test/test-util';
 import { AppModule } from 'src/app.module';
-
-const mockRepository = {
-  createUser: jest.fn(),
-  findUserByEmail: jest.fn(),
-  findUserById: jest.fn(),
-};
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { PrismaUsersRepository } from './repository/implementations/prisma-users.repository';
 
 describe('UsersService', () => {
   let usersService: UsersService;
   let prisma: PrismaService;
+  let usersRepository: PrismaUsersRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
       providers: [
         UsersService,
-        { provide: UsersRepository, useValue: mockRepository },
+        { provide: UsersRepository, useClass: PrismaUsersRepository },
       ],
     }).compile();
 
     prisma = module.get(PrismaService);
     await prisma.cleanDatabase();
     usersService = module.get<UsersService>(UsersService);
+    usersRepository = module.get<PrismaUsersRepository>(UsersRepository);
   });
 
   it('should be defined', () => {
@@ -34,12 +32,22 @@ describe('UsersService', () => {
   });
 
   describe('createUserService', () => {
+    it('should return status 409 if user already exist', async () => {
+      const user = TestUtil.giveValidUser();
+      await usersRepository.createUser(user);
+
+      try {
+        await usersService.createUser(user);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpException);
+        expect(error.getStatus()).toBe(HttpStatus.CONFLICT);
+      }
+    });
+
     it('should create a user sucessfully', async () => {
       const user = TestUtil.giveValidUser();
-      mockRepository.createUser(user);
 
       const createdUser = await usersService.createUser(user);
-      expect(mockRepository.createUser).toBeCalledTimes(1);
       expect(createdUser).toHaveProperty('id');
       expect(createdUser).toHaveProperty('name');
       expect(createdUser).toHaveProperty('email');
