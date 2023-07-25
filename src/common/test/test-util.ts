@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import * as jwt from 'jsonwebtoken';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
 
 export default class TestUtil {
@@ -10,5 +11,13 @@ export default class TestUtil {
       avatar: faker.internet.avatar(),
     };
     return user;
+  }
+
+  static generateJwtToken(userId: string) {
+    const secretKey = process.env.JWT_SECRET;
+    const token = jwt.sign({ sub: userId }, secretKey, {
+      expiresIn: '1h',
+    });
+    return token;
   }
 }
