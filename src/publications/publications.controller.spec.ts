@@ -10,6 +10,8 @@ import { UsersRepository } from 'src/users/repository/users.repository';
 import { PrismaUsersRepository } from 'src/users/repository/implementations/prisma-users.repository';
 import TestUtil from 'src/common/test/test-util';
 import { UsersController } from 'src/users/users.controller';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtModule } from '@nestjs/jwt';
 
 describe('PublicationsController', () => {
   let publicationsController: PublicationsController;
@@ -19,7 +21,7 @@ describe('PublicationsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, JwtModule],
       controllers: [PublicationsController],
       providers: [
         PublicationsService,
@@ -32,6 +34,7 @@ describe('PublicationsController', () => {
           provide: UsersRepository,
           useClass: PrismaUsersRepository,
         },
+        AuthService,
       ],
     }).compile();
 
@@ -51,6 +54,8 @@ describe('PublicationsController', () => {
       const createdUser = await usersController.createUser(user);
       const userId = createdUser.id;
       const token = TestUtil.generateJwtToken(userId);
+
+      return token;
     });
   });
 });
