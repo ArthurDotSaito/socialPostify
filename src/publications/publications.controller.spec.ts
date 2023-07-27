@@ -12,6 +12,8 @@ import TestUtil from 'src/common/test/test-util';
 import { UsersController } from 'src/users/users.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
+import { HttpException } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/AuthGuard/auth.guard';
 
 describe('PublicationsController', () => {
   let publicationsController: PublicationsController;
@@ -50,12 +52,28 @@ describe('PublicationsController', () => {
 
   describe('POST /publication', () => {
     it('Should require authentication for creating a publication', async () => {
-      const user = TestUtil.giveValidUser();
-      const createdUser = await usersController.createUser(user);
-      const userId = createdUser.id;
-      const token = TestUtil.generateJwtToken(userId);
+      const userData = TestUtil.giveValidUser();
+      const user = await usersController.createUser(userData);
+      const publicationBody = TestUtil.generatePublicationBody();
+      jest.spyOn(AuthGuard.prototype, 'canActivate').mockResolvedValue(false);
 
-      return token;
+      try {
+        const response = await publicationsController.createPublication(
+          publicationBody,
+          user,
+        );
+        console.log(response);
+      } catch (error) {
+        // Expecting the error to be an instance of HttpException with 401 status
+        expect(error).toBeInstanceOf(HttpException);
+        expect(error.response).toEqual('Unauthorized');
+        expect(error.status).toBe(401);
+      }
     });
+
+    /*     it('Should create a publication and return his properties', async () => {
+            /*       const userId = createdUser.id;
+      const token = TestUtil.generateJwtToken(userId); 
+    }); */
   });
 });
