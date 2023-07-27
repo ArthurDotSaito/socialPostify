@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import * as jwt from 'jsonwebtoken';
+import { CreatePublicationDTO } from 'src/publications/dto/create-publication.dto';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
 
 export default class TestUtil {
@@ -19,5 +20,17 @@ export default class TestUtil {
       expiresIn: '1h',
     });
     return token;
+  }
+
+  static generatePublicationBody() {
+    const publicationBody: CreatePublicationDTO = {
+      image: faker.internet.avatar(),
+      title: faker.internet.domainWord(),
+      text: faker.lorem.word(),
+      dateToPublish: faker.date.future().toISOString(),
+      published: false,
+      socialMedia: 'LinkedIn',
+    };
+    return publicationBody;
   }
 }
